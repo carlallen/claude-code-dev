@@ -1,4 +1,4 @@
-name: blocky
+name: docker
 on:
   # Trigger the action manually from the UI
   workflow_dispatch:
@@ -8,7 +8,7 @@ on:
       - 'main'
       
 jobs:
-  blocky:
+  docker:
     runs-on: ubuntu-latest
     permissions:
       packages: write
