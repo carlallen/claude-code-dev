@@ -1,13 +1,16 @@
-FROM node:22
+FROM ruby:3.2
 
-ARG TZ
-ENV TZ="$TZ"
+RUN groupadd --gid 1000 node \
+  && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
 
 ARG CLAUDE_CODE_VERSION=latest
 
-# Install basic development tools and iptables/ipset
 RUN apt-get update && apt-get install -y --no-install-recommends \
+  build-essential \
   curl \
+  ca-certificates \
+  gnupg \
+  cmake \
   less \
   git \
   procps \
@@ -28,7 +31,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   vim \
   && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Ensure default node user has access to /usr/local/share
+# Install Node.js (v22) + Yarn (via Corepack) and verify version (engine requires >= 22.12.0)
+RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
+    apt-get install -y nodejs && \
+    node -v && node -v | grep -E '^v22\.' && \
+    corepack enable && corepack prepare yarn@1.22.22 --activate && \
+    yarn -v
+
 RUN mkdir -p /usr/local/share/npm-global && \
   chown -R node:node /usr/local/share
 

@@ -1,4 +1,4 @@
-name: docker
+name: ruby32
 on:
   # Trigger the action manually from the UI
   workflow_dispatch:
@@ -33,6 +33,6 @@ jobs:
         with:
           platforms: linux/amd64,linux/arm64
           push: true
-          file: Dockerfile
+          file: ruby32.Dockerfile
           context: .
-          tags: ${{ vars.DOCKERHUB_USERNAME }}/claude-code-dev:latest
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/claude-code-dev:ruby-3.2-latest
